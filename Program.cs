@@ -19,8 +19,15 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/weatherforecast", (HttpContext httpContext, ILogger<Program> logger) =>
 {
+    // Log each incoming request to this endpoint with useful request info
+    logger.LogInformation("GetWeatherForecast request received from {RemoteIp} - {Method} {Path}{QueryString}",
+        httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        httpContext.Request.Method,
+        httpContext.Request.Path,
+        httpContext.Request.QueryString);
+
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
